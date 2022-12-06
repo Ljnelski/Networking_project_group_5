@@ -23,7 +23,7 @@ class Publisher():
 
     def generate_value(self):
         time = np.arange(0,2*math.pi,math.pi/10)
-        amplitude = np.sin(time)
+        amplitude = np.sin(time).tolist()
         self.value = random.choice(amplitude)
         self.timestamp = datetime.now().strftime('%M:%S.%f')[:-4]
     
