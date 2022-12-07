@@ -67,17 +67,17 @@ class App(tk.Tk):
         self.geometry("1000x1000")
 
         frame = tk.Frame(self).pack()
-        label = tk.Label(frame, text="Graph page!").pack(padx=10,pady=10)
+        tk.Label(frame, text="Graph page!").pack(padx=10,pady=10)
 
-        self.figure = Figure((5,5), dpi=100)
-        self.graph = self.figure.add_subplot(111)
+        figure = Figure((5,5), dpi=100)
+        self.graph = figure.add_subplot(111)
         # self.graph.plot([1,2,3,4],[1,2,3,4])
 
-        self.canvas = FigureCanvasTkAgg(self.figure,self)
-        self.canvas.draw()
-        self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        canvas = FigureCanvasTkAgg(figure,self)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        self.ani = FuncAnimation(self.figure, self.animate, interval=1000)
+        self.ani = FuncAnimation(figure, self.animate, interval=1000)
 
         # # start subscriber
         self.subscriber.run()
@@ -92,32 +92,40 @@ class App(tk.Tk):
         #stack x_labels to muiltiple lines
         x_data = list(self.subscriber.x_values)
         dataLen = len(x_data)
+        
+        print("\n\n\n\n\n")
 
-        print(x_data)
         if dataLen == 0:            
             return
 
-        x_labels = []
-        labelCount = 3        
-        lastLabelIndex = dataLen - 1
-        labelPositions = []
-
-        for i in range(0, dataLen, max(int(lastLabelIndex/(labelCount - 1)), 1)):            
-            labelPositions.append(i)
-        
-        # set last label position to be the last datapoint in the array
-        labelPositions[len(labelPositions) - 1] = lastLabelIndex
+        x_labels = []              
 
         if dataLen == 1: # if there is one element just create the label
             x_labels.append(str(x_data[i]).replace('-', '\n')) 
         else:
-            nextLabelIndex = labelPositions.pop()
+            x_labels = []
+            labelCount = 5       
+            lastLabelIndex = dataLen - 1
+            labelPositions = []
+
+            # calculate where labels need to be
+            for i in range(0, dataLen, max(int(lastLabelIndex/(labelCount - 1)), 1)):            
+                labelPositions.append(i)
+        
+            # set last label position to be the last datapoint in the array
+            labelPositions[len(labelPositions) - 1] = lastLabelIndex
+            
             # Create labels for x axis
             for i in range(0, dataLen):
-                print("datapointIndex: ", i)
-                if i == nextLabelIndex:                
+                print("index: ", i, ", nextLabelPos: ", labelPositions[0])
+                print("labelPositions: ", labelPositions)
+
+                if i == labelPositions[0]: 
+                    print("Appending Label at pos ", i)             
                     x_labels.append(str(x_data[i]).replace('-', '\n')) 
-                    nextLabelIndex = labelPositions.pop(0)                
+                    if len(labelPositions) > 0: # don't pop if last label
+                         labelPositions.pop(0)                
+                        #  print("labelPositions: ", labelPositions)
                 else:
                     x_labels.append("")                   
 
