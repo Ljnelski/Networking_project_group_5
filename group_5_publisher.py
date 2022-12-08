@@ -14,15 +14,20 @@ class Publisher():
         self.topic = topic
         self.data = {}
         self.dataGenerator = DataGenerator()
-        # self.publish()   
-   
-    def createData(self) -> str:
+    
+    def set_data_generator_parameters(self, base = 0, climb = 0, random_base = 0, random_sigma = 0, minute_sin_amplitude = 0, hour_sin_amplitude = 0):
+        self.dataGenerator.base = base
+        self.dataGenerator.climb = climb
+        self.dataGenerator.random_base = random_base
+        self.dataGenerator.random_sigma = random_sigma
+        self.dataGenerator.minute_sin_amplitude = minute_sin_amplitude
+        self.dataGenerator.hour_sin_amplitude = hour_sin_amplitude
 
+    def createData(self) -> str:
         data = {
             "y-value" : self.dataGenerator.generate_value(),
             "Timestamp" : datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
         }
-
 
         data = json.dumps(data, default=str)
         return data
@@ -42,6 +47,5 @@ class Publisher():
                 time.sleep(1)
             except Exception as e:
                 print("Connection Failed:")
-                raise e
                 exit()
 
