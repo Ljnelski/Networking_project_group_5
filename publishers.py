@@ -1,3 +1,5 @@
+# RUNS TWO PUBLISHERS AS THREADS
+
 import threading
 from group_5_publisher import Publisher
 
