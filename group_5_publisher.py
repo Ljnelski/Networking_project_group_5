@@ -14,7 +14,7 @@ class Publisher():
         self.topic = topic
         self.data = {}
         self.dataGenerator = DataGenerator()
-        self.publish()   
+        # self.publish()   
    
     def createData(self) -> str:
 
@@ -45,9 +45,3 @@ class Publisher():
                 raise e
                 exit()
 
-
-if __name__ == "__main__":
-    broker = "mqtt.eclipseprojects.io"
-    port = 1883
-    topic = "OSCILLATIONS"
-    Publisher(broker,port,topic)
