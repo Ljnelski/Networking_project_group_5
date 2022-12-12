@@ -80,7 +80,7 @@ class Subscriber():
     def on_message(self, client, userdata, message):        
         msg = json.loads(message.payload.decode("utf-8"))
         self.append_val(message.topic,msg)
-        # print("Received message '" + " '{}' , Timestamp '{}' ".format(str(msg["y-value"]),str(msg["Timestamp"]) ))
+        print("Received message '" + " '{}' , Timestamp '{}' ".format(str(msg["y-value"]),str(msg["Timestamp"]) ))
 
     def run(self):
         try:
