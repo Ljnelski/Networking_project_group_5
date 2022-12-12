@@ -13,13 +13,20 @@ class DataGenerator():
         self.hour_sin_amplitude = hour_sin_amplitude
         
     def generate_value(self) -> int:
-        newValue = 0
-        t = int(datetime.datetime.now().timestamp())
+        r1 = random.randint(1, 50)
+        r2 = random.randint(1, 50)
+        if r1 == r2:
+            value = 7
 
-        sin_minute_cycle_value = self.minute_sin_amplitude * math.sin(((2 * math.pi)/(60) * t))
-        random_value = random.gauss(self.random_base, self.random_sigma)
+            return value
+        else:
+            newValue = 0
+            t = int(datetime.datetime.now().timestamp())
 
-        newValue = random_value + self.base + sin_minute_cycle_value
+            sin_minute_cycle_value = self.minute_sin_amplitude * math.sin(((2 * math.pi)/(60) * t))
+            random_value = random.gauss(self.random_base, self.random_sigma)
+
+            newValue = random_value + self.base + sin_minute_cycle_value
         
-        self.base = self.base + self.climb
-        return newValue
+            self.base = self.base + self.climb
+            return newValue

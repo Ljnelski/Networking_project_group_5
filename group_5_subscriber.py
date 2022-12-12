@@ -1,3 +1,6 @@
+import random
+import tkinter
+
 import numpy as np
 import datetime
 import json
@@ -37,7 +40,12 @@ class Subscriber():
             topic_data_points = {
                 "x_values": [],
                 "y_values": []
-            }       
+            }
+        if  y_value == 7:
+            topic_data_points["x_values"].append("error")
+            topic_data_points["y_values"].append(random.randint(-3,3))
+
+            tkinter.messagebox.showerror("showerror", "Value out of Bounds")
         else: # update existing lists
             topic_data_points["x_values"].append(x_value)
             topic_data_points["y_values"].append(y_value)      

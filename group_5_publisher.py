@@ -1,5 +1,6 @@
 
 import json
+import random
 import paho.mqtt.client as mqtt
 import time
 from group_5_dataGenerator import DataGenerator
@@ -24,13 +25,27 @@ class Publisher():
         self.dataGenerator.hour_sin_amplitude = hour_sin_amplitude
 
     def createData(self) -> str:
-        data = {
-            "y-value" : self.dataGenerator.generate_value(),
-            "Timestamp" : datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
-        }
+        r1 = random.randint(1, 20)
+        r2 = random.randint(1, 20)
+        # interruption time and value set
+        if r1 == r2:
 
-        data = json.dumps(data, default=str)
-        return data
+            data = {
+                "y-value": 0,
+                "Timestamp": datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
+            }
+            print("interruption")
+
+            data = json.dumps(data, default=str)
+
+            return data
+        else:
+            data = {
+                "y-value": self.dataGenerator.generate_value(),
+                "Timestamp": datetime.now().strftime('%Y/%m/%d-%H:%M:%S')
+            }
+            data = json.dumps(data, default=str)
+            return data
 
     def publish(self):
         # Created Package
@@ -41,11 +56,22 @@ class Publisher():
 
         while True:
             package = self.createData()
-            try:                        
+            #convert package to dictionary
+            packDict = json.loads(package)
+            #checking if value is int 0 to simulate a loss of connection
+            if packDict["y-value"] == 0:
+
                 self.client.publish(self.topic, package)
-                print("Published: " + str(package) + " to topic: " + self.topic)
-                time.sleep(1)
-            except Exception as e:
-                print("Connection Failed:")
-                exit()
+                print(package)
+                print("Lost connection")
+                time.sleep(5)
+            else:
+                try:
+                    self.client.publish(self.topic, package)
+                    print("Published: " + str(package) + " to topic: " + self.topic)
+                    time.sleep(1)
+                except Exception as e:
+                    print("Connection Failed:")
+                    raise e
+                    exit()
 
